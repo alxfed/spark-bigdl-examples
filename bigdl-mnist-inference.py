@@ -73,7 +73,7 @@ def main():
         image = imageio.imread('file://'+x).astype(np.float32).reshape(1, 28, 28)/255
         return image
     dataRDD = sc.parallelize(files).map(mapper)
-    predictRDD  = dataRDD.map(lambda x: common.Sample.from_ndarray(x[1],np.array([2.0])))
+    predictRDD  = dataRDD.map(lambda x: common.Sample.from_ndarray(x,np.array([2.0])))
     counts = model.predict(predictRDD).map(lambda x: (np.argmax(x)+1,1)).reduceByKey(lambda a,b: a+b)
     for x in counts.collect():
         LOG.info("%d count is %d",x[0],x[1])
